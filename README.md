@@ -1,6 +1,6 @@
 # Email Cleaner (IMAP)
 
-A Python script to delete emails from specific senders using IMAP and environment variables.
+A Python script to delete emails from specific domains using IMAP and environment variables.
 
 ## Setup
 
