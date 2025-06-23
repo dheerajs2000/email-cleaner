@@ -15,24 +15,24 @@ def delete_emails_from_senders():
         mail = imaplib.IMAP4_SSL(IMAP_SERVER)
         mail.login(EMAIL, PASSWORD)
         mail.select("inbox")
-
-        for sender in SENDERS_TO_DELETE:
-            sender = sender.strip()
-            if not sender:
+        mail_delete_count = 0
+        for domain in SENDERS_TO_DELETE:
+            domain = domain.strip()
+            if not domain:
                 continue
-
+            
             # Search emails from sender
-            result, data = mail.search(None, f'FROM "{sender}"')
+            result, data = mail.search(None, f'HEADER From "@{domain}"')
             email_ids = data[0].split()
-
-            print(f"🧹 Found {len(email_ids)} emails from: {sender}")
+            mail_delete_count += len(email_ids)
+            print(f"🧹 Found {len(email_ids)} emails from domain: {domain}")
 
             for email_id in email_ids:
                 mail.store(email_id, '+FLAGS', '\\Deleted')
 
         mail.expunge()
         mail.logout()
-        print("✅ Done deleting emails.")
+        print(f"✅ Done deleting {mail_delete_count} emails.")
 
     except Exception as e:
         print(f"❌ Error: {e}")
